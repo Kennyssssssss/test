@@ -1,0 +1,66 @@
+说明：开始我错误的以为，在本地建立一个库（如命名为learngit）之后，能够直接push到GitHub网页上，成为同名的库。事实上是，本地代码库跟GitHub网页上的Repository不同。有两种方法将本机的代码push到GitHub上，一种是先从GitHub网站上将相应项目对应的库git clone下来，在这个库的基础上删减东西，然后再push到网页上；第二种是直接在本地建立一个文件夹，init成一个git库，然后将这个库的内容push到网页上存在的一个库里。下面详述步骤。
+
+
+
+
+前提：已经安装了GitHub客户端，并配置好user.name和user.email（Git官网上下载安装，较简单）
+
+            在GitHub网站申请了账户
+
+            GitHub网站新建一个名为hello-world的仓库（命名随意，网站有新手指引）
+
+
+
+注：有些教程说要先配置本地Gitbash终端SSH连接GitHub，我实验的结果是不需要，具体原因我也不清楚，还望明白的大神给讲解
+
+
+
+下面我以不需要SSH设置为前提来讲，不过我还是把SSH设置方法列出来，以便参考：
+
+
+配置本地Gitbash终端利用SSH连接GitHub：
+
+step1：创建本地SSH Key：ssh-keygen -t rsa -C "xxxx@xx.com";回车——设置密码——确认密码。这里xxxx@xx.com为自己在GitHub上面注册的邮箱。
+
+step2：成功之后默认在C:\Users\用户名下生成.ssh文件夹（这个是隐藏文件，可以通过文件夹属性设置成为可见），进去之后打开id_rsa.pub，复制里面的Key。
+
+step3：登录GitHub官网，点击右上角账户——》Settings（账户配置）标签下，选择SSH and GPG Keys，然后点击SSH Keys的new SSH key。SSH Key的Title随便填，粘贴在本地电脑上生成的Key。
+
+第四步：测试是否成功：在gitbash终端中输入命令：ssh -T git@github.com；如果是第一次的会提示是否continue，输入yes就会看到：You've successfully authenticated, but GitHub does not provide shell access 。这就表示已成功连上github。
+
+
+下面切入正题，介绍两种方法：
+
+方法一：在从网页上git clone下来的仓库的基础上删减，然后push到网页中的仓库中
+
+step1：拷贝想要修改的网页中某个仓库的https地址，如：git@github.com:Github用户名/仓库名.git
+
+step2：在gitbash终端下使用命令"git clone https地址"将代码库下载到本机
+
+step3：在这个文件夹下添加或者删除某些文件，或者加删文件的某些内容
+
+step4：在gitbash终端下使用命令"git add ."将所有文件添加到缓存区；利用命令“git status -s”查看文件添加状态
+
+step5：在gitbash终端下使用命令“git commit -m ‘提交注释’”将提交到缓存区的文件添加到本地仓库中去
+
+step6：在gitbash终端下使用命令“git push”或者“git push origin master”将本地仓库中的文件push到网页的仓库中去
+
+
+
+方法二：新建本地仓库，并将代码push到网页中
+
+step1：新建一个本地仓库方法：新建一个文件夹，将gitbash终端切换到当前文件夹，输入命令“git init”命令将当前文件夹设置成本地仓库，或者直接用命令“git init 文件夹名”来新建一个本地仓库
+
+step2：将需要Push到Github上的代码文件以及其他所有文件均拷贝到新建的本地仓库目录下；
+
+step3：在gitbash终端下使用命令“git remote add origin https地址”，此时你会看到.git文件夹下的config文件中多了配置[remote "origin"]
+url = https://github.com/HannahYA/hello-world.git
+fetch = +refs/heads/*:refs/remotes/origin/*
+
+step4：在gitbash终端下使用命令“git add .”“git commit -m '提交注释信息'”将提交到缓存区的所有文件添加提交到本地仓库中
+
+step5：在gitbash终端下使用命令“git push origin master”，这一步可能会出错，“failed to push some refs to git”，出现错误的主要原因是github中的README.md文件不在本地代码目录中，可以通过如下命令进行代码合并“git pull origin master‘’，执行上面代码后是先把远程代码库中文件拉下来，此时再执行语句 git push -u origin master即可完成代码上传到github，有时git pull 会失败，可以添加一个选项即可。然后再git push origin master，即可上传成功。
+
+git pull origin master --allow-unrelated-histories
+
+原文链接：https://blog.csdn.net/qq_33624395/article/details/76279460
